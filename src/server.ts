@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import express, { Request, Response, NextFunction } from "express";
 import handlers from "./lib/handlers";
+import walletRoutes from "./routes/wallet.routes";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
@@ -18,7 +19,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Routes will be mounted here
+// Routes
+app.use("/", walletRoutes);
 
 app.use(handlers.Error404Handler);
 
