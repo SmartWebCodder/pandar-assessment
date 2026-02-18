@@ -23,7 +23,7 @@ class UserService {
       balance: walletBalance,
     });
 
-    transactionRepo.create({
+    transactionRepo.createDoubleEntry({
       type: "credit",
       amount: walletBalance,
       reference: `initial-${userId}`,

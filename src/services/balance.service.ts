@@ -55,7 +55,7 @@ class BalanceService {
 
     userRepo.updateBalance(userId, amount);
 
-    transactionRepo.create({
+    transactionRepo.createDoubleEntry({
       type: "credit",
       amount,
       reference: idempotencyKey,

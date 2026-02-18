@@ -48,8 +48,8 @@ class WithdrawService {
 
     userRepo.updateBalance(userId, -amount);
 
-    transactionRepo.create({
-      type: "withdraw",
+    transactionRepo.createDoubleEntry({
+      type: "debit",
       amount,
       reference: idempotencyKey,
       userId,

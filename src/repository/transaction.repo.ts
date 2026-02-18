@@ -1,5 +1,7 @@
+const SYSTEM_ACCOUNT = "system";
+
 interface Transaction {
-  type: "credit" | "withdraw";
+  type: "credit" | "debit";
   amount: number;
   reference: string;
   createdAt: string;
@@ -9,21 +11,29 @@ interface Transaction {
 class TransactionRepo {
   private transactions: Transaction[] = [];
 
-  create(data: {
-    type: "credit" | "withdraw";
+  createDoubleEntry(data: {
     amount: number;
     reference: string;
     userId: string;
-  }): Transaction {
-    const transaction: Transaction = {
+    type: "credit" | "debit";
+  }): void {
+    const now = new Date().toISOString();
+
+    this.transactions.push({
       type: data.type,
       amount: data.amount,
       reference: data.reference,
       userId: data.userId,
-      createdAt: new Date().toISOString(),
-    };
-    this.transactions.push(transaction);
-    return transaction;
+      createdAt: now,
+    });
+
+    this.transactions.push({
+      type: data.type === "credit" ? "debit" : "credit",
+      amount: data.amount,
+      reference: data.reference,
+      userId: SYSTEM_ACCOUNT,
+      createdAt: now,
+    });
   }
 
   findByUserId(
