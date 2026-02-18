@@ -6,6 +6,12 @@ export function generateToken(userId: string): string {
   });
 }
 
-export function verifyToken(token: string): any {
-  return jwt.verify(token, process.env.JWT_SECRET!);
+interface TokenPayload {
+  user: string;
+  iat: number;
+  exp: number;
+}
+
+export function verifyToken(token: string): TokenPayload {
+  return jwt.verify(token, process.env.JWT_SECRET!) as TokenPayload;
 }

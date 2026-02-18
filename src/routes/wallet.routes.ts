@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 
 import userController from "../controllers/user.controller";
 import userMiddleware from "../middlewares/user.middleware";
@@ -14,9 +14,9 @@ import transactionController from "../controllers/transaction.controller";
 import authMiddleware from "../middlewares/auth.middleware";
 import rateLimiter from "../middlewares/rate_limiter.middleware";
 
-const walletRouter: any = Router();
+const walletRouter = Router();
 
-walletRouter.get("/", (req: any, res: any) => {
+walletRouter.get("/", (req: Request, res: Response) => {
   return res.status(200).json({ message: "Wallet API is running" });
 });
 

@@ -7,7 +7,7 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 
-const app: any = express();
+const app = express();
 
 app.use(
   cors({
