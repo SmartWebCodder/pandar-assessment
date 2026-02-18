@@ -21,6 +21,13 @@ class BalanceController {
         req.body.amount,
         idempotencyKey,
       );
+
+      if (result.replayed) {
+        res.setHeader("Idempotent-Replayed", "true");
+        const { replayed, ...cached } = result;
+        return res.status(200).json(cached);
+      }
+
       return res.status(200).json(result);
     } catch (err) {
       return next(err);

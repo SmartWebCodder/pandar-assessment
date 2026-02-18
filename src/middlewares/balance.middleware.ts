@@ -7,7 +7,7 @@ class BalanceMiddleware {
   async addBalance(req: Request, res: Response, next: NextFunction) {
     try {
       sanitizer(req.body);
-      await balanceSchema.addBalance.validateAsync(req.body || {});
+      req.body = await balanceSchema.addBalance.validateAsync(req.body || {});
 
       const idempotencyKey = req.headers["idempotency-key"];
 

@@ -178,7 +178,7 @@ src/
 
 - **In-memory storage** — no database required
 - **JWT authentication** — Bearer token on protected endpoints
-- **Idempotency** — duplicate requests return cached responses, scoped per user with configurable TTL expiry
+- **Idempotency** — duplicate requests return cached responses with `Idempotent-Replayed: true` header, scoped per user with configurable TTL expiry
 - **Concurrency safety** — both deposits and withdrawals are serialized per user to prevent race conditions
 - **Rate limiting** — sliding window on mutating endpoints, configurable via environment variables
 - **CORS restriction** — origin and HTTP method whitelist

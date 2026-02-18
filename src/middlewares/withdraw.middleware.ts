@@ -7,7 +7,7 @@ class WithdrawMiddleware {
   async withdraw(req: Request, res: Response, next: NextFunction) {
     try {
       sanitizer(req.body);
-      await withdrawSchema.withdraw.validateAsync(req.body || {});
+      req.body = await withdrawSchema.withdraw.validateAsync(req.body || {});
 
       const idempotencyKey = req.headers["idempotency-key"];
 

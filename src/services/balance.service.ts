@@ -21,7 +21,7 @@ class BalanceService {
 
   async addBalance(userId: string, amount: number, idempotencyKey: string) {
     if (idempotencyRepo.exists(idempotencyKey)) {
-      return idempotencyRepo.get(idempotencyKey);
+      return { ...idempotencyRepo.get(idempotencyKey), replayed: true };
     }
 
     const prev = userLocks.get(userId) || Promise.resolve();
@@ -42,7 +42,7 @@ class BalanceService {
     idempotencyKey: string,
   ) {
     if (idempotencyRepo.exists(idempotencyKey)) {
-      return idempotencyRepo.get(idempotencyKey);
+      return { ...idempotencyRepo.get(idempotencyKey), replayed: true };
     }
 
     const user = userRepo.findById(userId);

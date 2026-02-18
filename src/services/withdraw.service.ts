@@ -7,7 +7,7 @@ const userLocks: Map<string, Promise<any>> = new Map();
 class WithdrawService {
   async withdraw(userId: string, amount: number, idempotencyKey: string) {
     if (idempotencyRepo.exists(idempotencyKey)) {
-      return idempotencyRepo.get(idempotencyKey);
+      return { ...idempotencyRepo.get(idempotencyKey), replayed: true };
     }
 
     // Serialize per-user to prevent concurrent withdrawals from overdrawing
@@ -29,7 +29,7 @@ class WithdrawService {
     idempotencyKey: string,
   ) {
     if (idempotencyRepo.exists(idempotencyKey)) {
-      return idempotencyRepo.get(idempotencyKey);
+      return { ...idempotencyRepo.get(idempotencyKey), replayed: true };
     }
 
     const user = userRepo.findById(userId);
