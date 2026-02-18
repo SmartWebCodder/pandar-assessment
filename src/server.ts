@@ -19,10 +19,14 @@ app.use(express.json({ limit: "50kb" }));
 app.use(compression());
 app.use(helmet());
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
-  next();
-});
+if (process.env.NODE_ENV !== "production") {
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    console.log(
+      `[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`,
+    );
+    next();
+  });
+}
 
 // Routes
 app.use("/", walletRoutes);

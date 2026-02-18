@@ -2,6 +2,8 @@ import userRepo from "../repository/user.repo";
 import transactionRepo from "../repository/transaction.repo";
 import idempotencyRepo from "../repository/idempotency.repo";
 
+const userLocks: Map<string, Promise<any>> = new Map();
+
 class BalanceService {
   getBalance(userId: string) {
     const user = userRepo.findById(userId);
@@ -17,7 +19,28 @@ class BalanceService {
     };
   }
 
-  addBalance(userId: string, amount: number, idempotencyKey: string) {
+  async addBalance(userId: string, amount: number, idempotencyKey: string) {
+    if (idempotencyRepo.exists(idempotencyKey)) {
+      return idempotencyRepo.get(idempotencyKey);
+    }
+
+    const prev = userLocks.get(userId) || Promise.resolve();
+    const current = prev.then(() =>
+      this.processAddBalance(userId, amount, idempotencyKey),
+    );
+    userLocks.set(
+      userId,
+      current.catch(() => {}),
+    );
+
+    return current;
+  }
+
+  private processAddBalance(
+    userId: string,
+    amount: number,
+    idempotencyKey: string,
+  ) {
     if (idempotencyRepo.exists(idempotencyKey)) {
       return idempotencyRepo.get(idempotencyKey);
     }

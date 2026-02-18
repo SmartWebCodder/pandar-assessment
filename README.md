@@ -20,11 +20,15 @@ npm start
 
 ## Environment Variables
 
-| Variable     | Description              | Default |
-|-------------|--------------------------|---------|
-| `PORT`      | Server port              | `3000`  |
-| `JWT_SECRET`| Secret key for JWT tokens| —       |
-| `JWT_EXPIRY`| Token expiry in seconds  | `86400` |
+| Variable               | Description                        | Default     |
+|------------------------|------------------------------------|-----------  |
+| `NODE_ENV`             | Environment mode                   | `development` |
+| `PORT`                 | Server port                        | `3000`      |
+| `JWT_SECRET`           | Secret key for JWT tokens          | —           |
+| `JWT_EXPIRY`           | Token expiry in seconds            | `86400`     |
+| `IDEMPOTENCY_TTL`      | Idempotency key TTL in ms          | `86400000`  |
+| `RATE_LIMIT_WINDOW_MS` | Rate limit window in ms            | `60000`     |
+| `RATE_LIMIT_MAX_REQUESTS` | Max requests per window         | `20`        |
 
 ---
 
@@ -156,27 +160,6 @@ Get paginated transaction history (most recent first).
 
 ---
 
-## Error Responses
-
-All errors return a consistent JSON structure:
-
-```json
-{
-  "error": "Error message here"
-}
-```
-
-| Status | Meaning                    |
-|--------|----------------------------|
-| 400    | Bad request / validation   |
-| 401    | Authentication required    |
-| 404    | Resource not found         |
-| 422    | Invalid input              |
-| 429    | Rate limit exceeded        |
-| 500    | Internal server error      |
-
----
-
 ## Project Structure
 
 ```
@@ -195,8 +178,11 @@ src/
 
 - **In-memory storage** — no database required
 - **JWT authentication** — Bearer token on protected endpoints
-- **Idempotency** — duplicate requests with the same key return cached responses
-- **Concurrency safety** — withdrawals are serialized per user to prevent overdrawing
-- **Rate limiting** — sliding window on mutating endpoints (20 req/min per IP)
+- **Idempotency** — duplicate requests return cached responses, scoped per user with configurable TTL expiry
+- **Concurrency safety** — both deposits and withdrawals are serialized per user to prevent race conditions
+- **Rate limiting** — sliding window on mutating endpoints, configurable via environment variables
+- **CORS restriction** — origin and HTTP method whitelist
+- **Body size limit** — 50kb cap on JSON payloads to prevent abuse
+- **Request logging** — development-only, disabled in production to avoid leaking sensitive data
 - **Input validation** — Joi schemas with sanitization
 - **Consistent error responses** — no stack traces exposed
