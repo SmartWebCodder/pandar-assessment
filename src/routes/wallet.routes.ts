@@ -16,6 +16,10 @@ import rateLimiter from "../middlewares/rate_limiter.middleware";
 
 const walletRouter: any = Router();
 
+walletRouter.get("/", (req: any, res: any) => {
+  return res.status(200).json({ message: "Wallet API is running" });
+});
+
 walletRouter.post(
   "/user",
   rateLimiter.limit,

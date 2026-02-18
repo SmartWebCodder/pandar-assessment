@@ -7,7 +7,7 @@ class UserMiddleware {
   async createUser(req: Request, res: Response, next: NextFunction) {
     try {
       sanitizer(req.body);
-      await userSchema.createUser.validateAsync(req.body);
+      await userSchema.createUser.validateAsync(req.body || {});
       return next();
     } catch (err: any) {
       err.status = 422;
