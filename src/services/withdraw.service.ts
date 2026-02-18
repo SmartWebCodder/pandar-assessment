@@ -48,7 +48,7 @@ class WithdrawService {
 
     userRepo.updateBalance(userId, -amount);
 
-    const transaction = transactionRepo.create({
+    transactionRepo.create({
       type: "withdraw",
       amount,
       reference: idempotencyKey,
@@ -57,15 +57,7 @@ class WithdrawService {
 
     const response = {
       message: "Withdrawal successful",
-      data: {
-        balance: user.balance,
-        transaction: {
-          type: transaction.type,
-          amount: transaction.amount,
-          reference: transaction.reference,
-          createdAt: transaction.createdAt,
-        },
-      },
+      data: { balance: user.balance },
     };
 
     idempotencyRepo.set(idempotencyKey, response);

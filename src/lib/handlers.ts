@@ -12,7 +12,11 @@ class Handlers {
       });
     }
 
-    return res.status(err.status || 500).json({ error: err.message || err });
+    const status = err.status || 500;
+    const message =
+      status === 500 ? "Internal server error" : err.message || err;
+
+    return res.status(status).json({ error: message });
   }
 
   Error404Handler(req: Request, res: Response, next: NextFunction) {

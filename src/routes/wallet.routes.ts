@@ -12,11 +12,13 @@ import withdrawMiddleware from "../middlewares/withdraw.middleware";
 import transactionController from "../controllers/transaction.controller";
 
 import authMiddleware from "../middlewares/auth.middleware";
+import rateLimiter from "../middlewares/rate_limiter.middleware";
 
 const walletRouter: any = Router();
 
 walletRouter.post(
   "/user",
+  rateLimiter.limit,
   userMiddleware.createUser,
   userController.createUser,
 );
@@ -29,6 +31,7 @@ walletRouter.get(
 
 walletRouter.post(
   "/add_balance",
+  rateLimiter.limit,
   authMiddleware.authenticateUser,
   balanceMiddleware.addBalance,
   balanceController.addBalance,
@@ -36,6 +39,7 @@ walletRouter.post(
 
 walletRouter.post(
   "/withdraw",
+  rateLimiter.limit,
   authMiddleware.authenticateUser,
   withdrawMiddleware.withdraw,
   withdrawController.withdraw,

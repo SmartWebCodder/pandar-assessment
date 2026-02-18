@@ -32,7 +32,7 @@ class BalanceService {
 
     userRepo.updateBalance(userId, amount);
 
-    const transaction = transactionRepo.create({
+    transactionRepo.create({
       type: "credit",
       amount,
       reference: idempotencyKey,
@@ -41,15 +41,7 @@ class BalanceService {
 
     const response = {
       message: "Balance added successfully",
-      data: {
-        balance: user.balance,
-        transaction: {
-          type: transaction.type,
-          amount: transaction.amount,
-          reference: transaction.reference,
-          createdAt: transaction.createdAt,
-        },
-      },
+      data: { balance: user.balance },
     };
 
     idempotencyRepo.set(idempotencyKey, response);
