@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from "express";
 const requestCounts: Map<string, { count: number; resetTime: number }> =
   new Map();
 
-const WINDOW_MS = 60 * 1000;
-const MAX_REQUESTS = 20;
+const WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS) || 60000;
+const MAX_REQUESTS = Number(process.env.RATE_LIMIT_MAX_REQUESTS) || 20;
 
 class RateLimiter {
   limit(req: Request, res: Response, next: NextFunction) {

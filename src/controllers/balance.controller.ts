@@ -15,7 +15,7 @@ class BalanceController {
 
   async addBalance(req: CustomRequest, res: Response, next: NextFunction) {
     try {
-      const idempotencyKey = req.headers["idempotency-key"] as string;
+      const idempotencyKey = `${req.user!}:${req.headers["idempotency-key"] as string}`;
       const result = balanceService.addBalance(
         req.user!,
         req.body.amount,

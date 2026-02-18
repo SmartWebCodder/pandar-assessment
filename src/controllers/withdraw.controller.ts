@@ -6,7 +6,7 @@ import withdrawService from "../services/withdraw.service";
 class WithdrawController {
   async withdraw(req: CustomRequest, res: Response, next: NextFunction) {
     try {
-      const idempotencyKey = req.headers["idempotency-key"] as string;
+      const idempotencyKey = `${req.user!}:${req.headers["idempotency-key"] as string}`;
       const result = await withdrawService.withdraw(
         req.user!,
         req.body.amount,
